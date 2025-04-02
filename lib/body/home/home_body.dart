@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rokafirst/data/product_data.dart'; // productByRegion 가져오기
 import 'package:rokafirst/screen/home_screen.dart';
@@ -9,12 +10,12 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
-  String? currentRegion = selectedRegion;
+  bool isLoading = false; // 로딩 상태 추가
 
+  // 지역 변경 시 선택된 지역을 업데이트
   void updateRegion(String? newRegion) {
     setState(() {
-      currentRegion = newRegion;
-      selectedRegion = newRegion; // 선택된 지역을 전역적으로 저장
+      selectedRegion = newRegion;
     });
   }
 
@@ -28,11 +29,12 @@ class _HomeBodyState extends State<HomeBody> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               RegionDropdown(
-                selectedRegion: currentRegion,
+                selectedRegion: selectedRegion,
                 onRegionChanged: updateRegion,
               ),
               const SizedBox(height: 20),
-              ConfirmButton(currentRegion: currentRegion),
+              ConfirmButton(),
+              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -41,8 +43,28 @@ class _HomeBodyState extends State<HomeBody> {
   }
 }
 
-// ✅ 지역 선택 Dropdown을 별도 위젯으로 분리
-class RegionDropdown extends StatelessWidget {
+class ConfirmButton extends StatelessWidget {
+  const ConfirmButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: selectedRegion != null
+          ? () async {
+        await fetchProductsByRegion(); // 서버에서 데이터 가져오기
+        await fetchNoticeByRegion();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()), // HomeScreen 이동
+        );
+      }
+          : null, // 선택된 지역이 없으면 버튼 비활성화
+      child: const Text('선택 완료'),
+    );
+  }
+}
+
+class RegionDropdown extends StatefulWidget {
   final String? selectedRegion;
   final Function(String?) onRegionChanged;
 
@@ -53,38 +75,56 @@ class RegionDropdown extends StatelessWidget {
   });
 
   @override
+  _RegionDropdownState createState() => _RegionDropdownState();
+}
+
+class _RegionDropdownState extends State<RegionDropdown> {
+  List<String> regionList = []; // Firestore에서 가져온 지역 리스트
+  bool isLoading = true; // 로딩 상태
+
+  @override
+  void initState() {
+    super.initState();
+    fetchRegions(); // Firestore에서 지역 정보 가져오기
+  }
+
+  // Firestore에서 market 컬렉션의 지역 정보 가져오기
+  Future<void> fetchRegions() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('market').get();
+      // 중복 제거를 위해 Set 사용
+      Set<String> regions = {};
+
+      for (var doc in snapshot.docs) {
+        String regionName = doc.id; // 🔥 문서 이름 가져오기!
+        regions.add(regionName);
+      }
+
+      setState(() {
+        regionList = regions.toList(); // Set을 List로 변환
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: selectedRegion,
+    return isLoading
+        ? const CircularProgressIndicator() // 로딩 중이면 인디케이터 표시
+        : DropdownButton<String>(
+      value: widget.selectedRegion,
       hint: const Text('지역을 선택하세요'),
-      onChanged: onRegionChanged,
-      items: productByRegion.keys.map<DropdownMenuItem<String>>((String region) {
+      onChanged: widget.onRegionChanged,
+      items: regionList.map<DropdownMenuItem<String>>((String region) {
         return DropdownMenuItem<String>(
           value: region,
           child: Text(region),
         );
       }).toList(),
-    );
-  }
-}
-
-// ✅ 선택 완료 버튼을 별도 위젯으로 분리
-class ConfirmButton extends StatelessWidget {
-  final String? currentRegion;
-
-  const ConfirmButton({super.key, required this.currentRegion});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: currentRegion != null
-          ? () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );      }
-          : null, // 지역이 선택되지 않으면 버튼 비활성화
-      child: const Text('선택 완료'),
     );
   }
 }

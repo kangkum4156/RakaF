@@ -12,8 +12,8 @@ class WaitingBody extends StatefulWidget {
 }
 
 class _WaitingBodyState extends State<WaitingBody> {
-  String? userId = email; // 사용자 ID
 
+  String? userId = email; // 사용자 ID
   void refreshUI() => setState(() {});
 
   @override
