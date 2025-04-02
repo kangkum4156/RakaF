@@ -100,8 +100,8 @@ class _WaitingBodyState extends State<WaitingBody> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildInfoBox(leftText),
-            _buildInfoBox('현재 매장 대기자 수 : \n$totalWaiting', textColor: Colors.orange),
+            _buildInfoBox(leftText, false),
+            _buildInfoBox('현재 매장 대기자 수 : \n$totalWaiting', true, textColor: Colors.orange),
           ],
         ),
         _buildMarketBox(market),
@@ -120,18 +120,46 @@ class _WaitingBodyState extends State<WaitingBody> {
     );
   }
 
-  Widget _buildInfoBox(String text, {Color textColor = Colors.black}) {
-    return Container(
-      height: 250,
-      width: 170,
-      decoration: _boxDecoration(),
-      child: Center(
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
+  Widget _buildInfoBox(String text, bool refresh, {Color textColor = Colors.black}) {
+    return Stack(
+      children: [
+        Container(
+          height: 250,
+          width: 170,
+          decoration: _boxDecoration(),
+          child: Center(
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
+            ),
+          ),
         ),
-      ),
+        if(refresh)Positioned(
+          top: 8, // 상단 여백
+          right: 8, // 오른쪽 여백
+          child: Container(
+            width: 25, // 컨테이너 너비 설정
+            height: 25,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 5,
+                  offset: Offset(0, 2),
+                ),
+              ],
+              shape: BoxShape.circle, // 원형 모양 설정
+            ),
+            child: IconButton(
+              icon: Icon(Icons.refresh, size: 20, color: Colors.grey),
+              onPressed: refreshUI,
+              padding: EdgeInsets.zero,
+            ),
+          )
+        ),
+      ],
     );
   }
 
