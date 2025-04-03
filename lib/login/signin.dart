@@ -6,6 +6,23 @@ import 'package:rokafirst/service/firebase_login_service.dart';
 import '../data/product_data.dart';
 
 
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    if(user!= null){
+      return HomeBody();
+    } else{
+      return LoginScreen();
+    }
+  }
+}
+
+
+
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -15,27 +32,44 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? _user;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    // 인증 상태 변화 리스너 등록
     _auth.authStateChanges().listen((User? user) {
-      setState(() {});
+      setState(() {
+        _user = user;
+      });// 로그인하거나 로그아웃하면 자동으로 _user가 바뀌고 화면이 바뀜
     });
   }
+
   // 회원가입 함수
   Future<void> _register() async {
-    await _auth.createUserWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),);
+    try {
+      UserCredential userCredential =
+      await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),);
+      print("Registered: ${userCredential.user?.email}");
+    } on FirebaseAuthException catch (e) {
+      print("Error: ${e.message}");
+    }
   }
   // 로그인 함수
   Future<void> _signIn() async {
-    await _auth.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim());
+    try {
+      UserCredential userCredential =
+      await _auth.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim());
+      print("Signed in: ${userCredential.user?.email}");
+    } on FirebaseAuthException catch (e) {
+      print("Error: ${e.message}");
+    }
   }
 
   @override
@@ -43,35 +77,35 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: SingleChildScrollView( // 추가
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 50), // 키보드 대비 여백 추가
-                Image.asset(
-                  'asset/img/air_logo.png',
-                  width: 200,
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  '대한민국공군',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const Text(
-                  'REPUBLIC OF KOREA AIR FORCE',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-                const SizedBox(height: 20),
-                LoginForm(
-                  onSignIn: _signIn,
-                  onRegister: _register,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'asset/img/air_logo.png', // 로고 이미지 경로
+                width: 200,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                '대한민국공군',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                'REPUBLIC OF KOREA AIR FORCE',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              const SizedBox(height: 20),
+              LoginForm(
+                  onSignIn: _signIn, //  로그인 함수 전달
+                  onRegister: () {
+
+                  },
                   emailController: _emailController,
-                  passwordController: _passwordController,
-                ),
-              ],
-            ),
+                  passwordController: _passwordController
+
+              ), // 분리된 클래스를 사용
+            ],
           ),
         ),
       ),
@@ -85,15 +119,19 @@ class LoginForm extends StatelessWidget {
   final VoidCallback onSignIn;
   final VoidCallback onRegister;
 
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
+  final emailController;
+  final passwordController;
 
-  const LoginForm({
+
+
+  LoginForm({
     super.key,
     required this.onSignIn,
     required this.onRegister,
     required this.emailController,
     required this.passwordController});
+
+
   @override
 
   Widget build(BuildContext context) {
@@ -132,7 +170,6 @@ class LoginForm extends StatelessWidget {
           ElevatedButton (
             onPressed: () async {
               final result = await signInWithApproval(emailController.text, passwordController.text);
-              if (!context.mounted) return; // context가 유효한지 확인
               switch(result) {
                 case(0):
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -140,18 +177,21 @@ class LoginForm extends StatelessWidget {
                   );
                   break;
                 case(1):
-                  email = emailController.text;
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => HomeBody()),
                   );
-                  break;
+
                 case(2):
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("관리자 승인 후 로그인 가능합니다.")),
                   );
                   break;
+
               }
+
+
+
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.black,
