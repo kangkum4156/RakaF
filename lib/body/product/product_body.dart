@@ -27,7 +27,7 @@ class ProductBody extends StatelessWidget {
             index: index,
             productName: product["name"] ?? "상품 ${index + 1}",
             productPrice: product["price"] ?? "0",
-            imagePath: product["image"] ?? "assets/wine/default.png",
+            imagePath: product["image"] ?? "",
           );
         },
       ),
@@ -71,11 +71,7 @@ class ProductCard extends StatelessWidget {
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  imagePath,
-                  width: double.infinity,
-                  fit: BoxFit.contain, /// 이미지 안짤리게
-                ),
+                child: Image.network("https://2e02-155-230-25-18.ngrok-free.app" + imagePath, width: double.infinity, fit: BoxFit.contain)
               ),
             ),
             Padding(

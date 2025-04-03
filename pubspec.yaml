@@ -68,7 +68,6 @@ flutter:
 
   assets:
     - asset/img/
-    - asset/wine/
 
   #img 경로까지만 저장해두면 뒤에 다른 이미지를 저장해도 자동으로 등록이 됨
 
