@@ -20,9 +20,6 @@ class AuthWrapper extends StatelessWidget {
   }
 }
 
-
-
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 

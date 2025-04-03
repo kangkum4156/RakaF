@@ -7,7 +7,7 @@ List<dynamic> selectedNotices = []; // 선택된 지역의 notice 리스트 저�
 String? selectedMarketId;
 String? email;
 
-String servertoken = "https://2d72-155-230-25-18.ngrok-free.app";
+String servertoken = "https://9981-155-230-25-18.ngrok-free.app";
 
 // 서버에서 특정 지역의 상품 가져오기
 Future<void> fetchProductsByRegion() async {
