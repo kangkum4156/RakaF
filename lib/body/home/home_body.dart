@@ -73,7 +73,6 @@ class RegionDropdown extends StatefulWidget {
     required this.selectedRegion,
     required this.onRegionChanged,
   });
-
   @override
   _RegionDropdownState createState() => _RegionDropdownState();
 }
