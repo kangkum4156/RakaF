@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rokafirst/login/signin.dart';
 import 'package:rokafirst/service/firebase_login_service.dart';
 
+
 class Signup extends StatefulWidget {
   const Signup({super.key});
 
@@ -12,6 +13,7 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _serviceNumberController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -19,9 +21,11 @@ class _SignupState extends State<Signup> {
     await registerToFirestore(
       name: _nameController.text.trim(),
       studentId: _serviceNumberController.text.trim(),
+      phone: _phoneController.text.trim(),
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
+    print("회원가입 성공! LoginScreen으로 이동");
 
     Navigator.pushReplacement(
       context,
@@ -33,6 +37,7 @@ class _SignupState extends State<Signup> {
   void dispose() {
     _nameController.dispose();
     _serviceNumberController.dispose();
+    _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -59,6 +64,11 @@ class _SignupState extends State<Signup> {
             TextField(
               controller: _emailController,
               decoration: InputDecoration(labelText: "이메일", border: OutlineInputBorder()),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: _phoneController,
+              decoration: InputDecoration(labelText: "전화번호", border: OutlineInputBorder()),
             ),
             SizedBox(height: 12),
             TextField(

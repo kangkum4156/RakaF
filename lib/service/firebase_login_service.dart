@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -5,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 Future <void> registerToFirestore({
   required String name,
   required String studentId,
+  required String phone,
   required String email,
   required String password,
 })
@@ -21,11 +23,14 @@ async {
       'uid': uid,
       'name': name,
       'serviceNumber': studentId,
+      'phone': phone,
       'createdAt': FieldValue.serverTimestamp(),
       'isApproved': false, // 기본값: 승인되지 않음
     });
 
+    print('Firestore에 회원정보 저장 완료!');
   } catch (e) {
+    print('회원가입 중 오류 발생: $e');
     rethrow; // 위쪽에서 오류 처리 가능하도록 다시 던짐
   }
 }
@@ -55,10 +60,11 @@ Future<int> signInWithApproval(String email, String password) async {
       await FirebaseAuth.instance.signOut(); // 승인 안 됐으면 로그아웃
       return 2; // 승인 안 됨
     }
-  } on FirebaseAuthException {
+  } on FirebaseAuthException catch (e) {
+    print('로그인 에러: ${e.code} / ${e.message}');
     return 0; // 로그인 실패
   } catch (e) {
+    print('기타 에러: $e');
     return 0; // 예외 처리
   }
 }
-
