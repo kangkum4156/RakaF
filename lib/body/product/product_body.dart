@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rokafirst/data/product_data.dart'; // selectedProducts를 가져오기
-import 'package:rokafirst/body/product/productdetail.dart'; // 상품 상세 화면
 
 class ProductBody extends StatelessWidget {
   const ProductBody({super.key});
@@ -53,14 +52,6 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell( ///터치 가능 카드
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute( ///페이지 이동
-            builder: (context) => ProductDetailScreen(productName: productName),
-          ),
-        );
-      },
       borderRadius: BorderRadius.circular(5),
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),

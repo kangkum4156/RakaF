@@ -21,7 +21,6 @@ Future<void> fetchProductsByRegion() async {
       selectedProducts = jsonResponse
           .where((item) => item['market']['location'].toString() == selectedRegion) // 필터링 적용
           .map((item) {
-        print(item['market']['location']);
         return {
           'name': item['productName'].toString(),
           'text': item['productText'].toString(),
@@ -33,7 +32,6 @@ Future<void> fetchProductsByRegion() async {
       throw Exception('상품 데이터를 불러오는 데 실패했습니다.');
     }
   } catch (e) {
-    print("상품 데이터 로드 오류: $e");
     selectedProducts = [];
   }
 }
@@ -61,7 +59,6 @@ Future<void> fetchNoticeByRegion() async {
       throw Exception('공지 데이터를 불러오는 데 실패했습니다.');
     }
   } catch (e) {
-    print("공지 데이터 로드 오류: $e");
     selectedNotices = [];
   }
 }
