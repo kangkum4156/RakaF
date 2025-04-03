@@ -47,18 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  // 회원가입 함수
-  Future<void> _register() async {
-    try {
-      UserCredential userCredential =
-      await _auth.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),);
-      print("Registered: ${userCredential.user?.email}");
-    } on FirebaseAuthException catch (e) {
-      print("Error: ${e.message}");
-    }
-  }
+
   // 로그인 함수
   Future<void> _signIn() async {
     try {
