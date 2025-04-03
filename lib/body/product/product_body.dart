@@ -71,7 +71,7 @@ class ProductCard extends StatelessWidget {
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network("https://2e02-155-230-25-18.ngrok-free.app" + imagePath, width: double.infinity, fit: BoxFit.contain)
+                child: Image.network(servertoken + imagePath, width: double.infinity, fit: BoxFit.contain)
               ),
             ),
             Padding(
