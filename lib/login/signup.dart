@@ -23,7 +23,7 @@ class _SignupState extends State<Signup> {
 
   // 다음 버튼 눌렀을 때 실행될 함수
   void _goNext() async {
-    if (tab < 4) {
+    if (tab < 4 ) {
       // 아직 마지막 단계가 아니면 다음 단계로 이동
       setState(() {
         tab++;

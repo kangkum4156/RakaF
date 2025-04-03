@@ -166,6 +166,7 @@ class LoginForm extends StatelessWidget {
                   );
                   break;
                 case(1):
+                  email = emailController.text;
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => HomeBody()),
