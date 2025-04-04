@@ -4,6 +4,7 @@ import 'package:rokafirst/login/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rokafirst/service/firebase_login_service.dart';
 import '../data/product_data.dart';
+import 'package:rokafirst/login/signupflowdata.dart';
 
 
 class AuthWrapper extends StatelessWidget {
@@ -193,7 +194,7 @@ class LoginForm extends StatelessWidget {
           TextButton(onPressed: (){
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Signup()),
+              MaterialPageRoute(builder: (context) => SignupNamePage(data: SignupFlowData(),)),
             );
           }, child: Text("Don't have account?"))
         ],
