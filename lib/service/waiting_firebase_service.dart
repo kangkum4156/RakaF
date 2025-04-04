@@ -51,7 +51,7 @@ Future<void> waitingPressed(BuildContext context, Function updateUI) async {
 Future<void> cancelWaiting(BuildContext context, Function updateUI) async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   String? userId = email; // 실제 사용자 ID로 변경
-  String? waitingMarket = await _getWaitingMarket(userId);
+  String? waitingMarket = await getWaitingMarket(userId);
 
   if (waitingMarket == null) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -82,7 +82,7 @@ Future<void> cancelWaiting(BuildContext context, Function updateUI) async {
 }
 
 // 웨이팅 중인 매장 정보를 가져오는 함수
-Future<String?> _getWaitingMarket(String? userId) async {
+Future<String?> getWaitingMarket(String? userId) async {
   DocumentSnapshot userSnapshot =
   await FirebaseFirestore.instance.collection("users").doc(userId).get();
 
@@ -92,4 +92,27 @@ Future<String?> _getWaitingMarket(String? userId) async {
   userSnapshot.data() as Map<String, dynamic>;
 
   return userData['waiting_market']; // 웨이팅 중인 매장
+}
+Future<String?> getWaitingOrder(String? userId, String? waitingMarket) async {
+  if (userId == null || waitingMarket == null) return null;
+
+  try {
+    // 해당 매장의 waiting 리스트를 timestamp 기준으로 정렬해서 가져옴
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("market")
+        .doc(waitingMarket)
+        .collection("waiting")
+        .orderBy("timestamp")
+        .get();
+
+    List<QueryDocumentSnapshot> waitingList = snapshot.docs;
+
+    int position = waitingList.indexWhere((doc) => doc.id == userId);
+    if (position == -1) return null; // 유저가 웨이팅 리스트에 없을 경우
+
+    return (position + 1).toString(); // 순번은 0부터 시작하니까 +1
+  } catch (e) {
+    print("getWaitingOrder error: $e");
+    return null;
+  }
 }
