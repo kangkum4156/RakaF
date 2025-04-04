@@ -19,12 +19,10 @@ class NoticeDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String formattedTime;
-
     try {
       DateTime dateTime = DateTime.parse(time);
       formattedTime = DateFormat('yyyy-MM-dd').format(dateTime);
     } catch (e) {
-      print('시간 포맷팅 오류: $e');
       formattedTime = time;
     }
 
@@ -44,11 +42,18 @@ class NoticeDetailScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              if (image.isNotEmpty)
+            if (image != 'null')
                 Image.network(
                   servertoken + image,
                   width: double.infinity,
                   fit: BoxFit.contain,
+                )
+              else
+                const Center(
+                  child: Text(
+                    "이미지가 없습니다",
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
                 ),
               const SizedBox(height: 20),
               Text(
