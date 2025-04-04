@@ -58,7 +58,7 @@ class NoticeCard extends StatelessWidget {
     }
 
     return InkWell(
-      onTap: () {
+        onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
