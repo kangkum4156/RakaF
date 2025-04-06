@@ -6,6 +6,7 @@ import 'package:rokafirst/body/notice/notice_body.dart'; // NoticeBody import
 import 'package:rokafirst/body/product/product_body.dart'; // ProductBody import
 import 'package:rokafirst/body/waiting/waiting_body.dart'; // WaitingBody import
 
+
 final List<Widget> _screens = [
   const WaitingBody(),
   const ProductBody(),
