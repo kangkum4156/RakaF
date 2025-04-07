@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rokafirst/login/signin.dart';
-import 'package:rokafirst/login/signupflowdata.dart';
 
 class SignupFinish extends StatelessWidget {
   final String userName;
+
 
   const SignupFinish({super.key, required this.userName});
 
