@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rokafirst/login/utils/encryption.dart';
 
 //firestore에 저장하는 함수
 Future <void> registerToFirestore({
   required String name,
-  required String studentId,
+  required String serviceNumber,
   required String phone,
   required String email,
   required String password,
@@ -19,10 +19,11 @@ async {
     String uid = userCredential.user!.uid;
 
     // 2. Firestore에 사용자 정보 저장
+    final encrypted = await encryptServiceNumber(serviceNumber);
     await FirebaseFirestore.instance.collection('users').doc(email).set({
       'uid': uid,
       'name': name,
-      'serviceNumber': studentId,
+      'serviceNumber': encrypted,
       'phone': phone,
       'createdAt': FieldValue.serverTimestamp(),
       'isApproved': false, // 기본값: 승인되지 않음
@@ -67,4 +68,17 @@ Future<int> signInWithApproval(String email, String password) async {
     print('기타 에러: $e');
     return 0; // 예외 처리
   }
+}
+//email 중복 확인
+Future<bool> isEmailDuplicate(String email) async {
+  final doc = await FirebaseFirestore.instance.collection('users').doc(email).get();
+  return doc.exists;
+}
+//군번 중복 확인
+Future<bool> isServiceNumberDuplicate(String serviceNumber) async {
+  final snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .where('serviceNumber', isEqualTo: serviceNumber)
+      .get();
+  return snapshot.docs.isNotEmpty;
 }

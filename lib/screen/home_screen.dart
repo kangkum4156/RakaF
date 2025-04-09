@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rokafirst/body/home/home_body.dart';
 import 'package:rokafirst/login/signin.dart';
 import 'package:rokafirst/body/notice/notice_body.dart'; // NoticeBody import
 import 'package:rokafirst/body/product/product_body.dart'; // ProductBody import
 import 'package:rokafirst/body/waiting/waiting_body.dart'; // WaitingBody import
+
 
 final List<Widget> _screens = [
   const WaitingBody(),
@@ -49,7 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.exit_to_app),
-            onPressed: () {
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const LoginScreen()),
