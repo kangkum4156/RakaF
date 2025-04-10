@@ -193,30 +193,44 @@ class _WaitingBodyState extends State<WaitingBody> {
   }
 
   Widget _buildCommonUI(int totalWaiting) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Row(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildInfoBox('매장 : ${selectedRegion}', false),
-            _buildInfoBox('현재 매장 대기자 수 : \n$totalWaiting', true, textColor: Colors.orange),
+            Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              alignment: WrapAlignment.center,
+              children: [
+                _buildInfoBox('매장 : $selectedRegion', false),
+                _buildInfoBox('현재 매장 대기자 수 : \n$totalWaiting', true, textColor: Colors.orange),
+              ],
+            ),
+            const SizedBox(height: 20),
+            _buildMarketBox(selectedRegion!),
           ],
         ),
-        _buildMarketBox(selectedRegion!),
-      ],
+      ),
     );
   }
+
 
   Widget _buildInfoBox(String text, bool refresh, {Color textColor = Colors.black}) {
     return Stack(
       children: [
         Container(
-          height: 250,
-          width: 170,
+          width: MediaQuery.of(context).size.width * 0.4, // 화면의 40% 너비
+          constraints: const BoxConstraints(minHeight: 150),
+          padding: const EdgeInsets.all(16),
           decoration: _boxDecoration(),
           child: Center(
-            child: Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor),
+            ),
           ),
         ),
         if (refresh)
@@ -242,6 +256,7 @@ class _WaitingBodyState extends State<WaitingBody> {
     );
   }
 
+
   Widget _buildMarketBox(String marketId) {
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseFirestore.instance.collection("market").doc(marketId).get(),
@@ -255,15 +270,15 @@ class _WaitingBodyState extends State<WaitingBody> {
         String openTime = marketData['openTime'] ?? '운영시간 정보 없음';
 
         return Container(
-          height: 360,
-          width: 360,
+          width: double.infinity,
+          margin: const EdgeInsets.only(top: 16),
           padding: const EdgeInsets.all(20),
           decoration: _boxDecoration(),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('📍 위치: $location', style: const TextStyle(fontSize: 15)),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               Text('⏰ 운영시간: $openTime', style: const TextStyle(fontSize: 15)),
             ],
           ),
