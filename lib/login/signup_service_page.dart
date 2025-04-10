@@ -59,7 +59,7 @@ class _SignupServicePageState extends State<SignupServicePage> {
                         icon: const Icon(Icons.arrow_back)),
                     const SizedBox(height: 120),
                     const Text(
-                      "군번 10자리를 입력해주세요",
+                      "군번 7-8자리를 입력해주세요",
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
@@ -67,7 +67,7 @@ class _SignupServicePageState extends State<SignupServicePage> {
                     TextField(
                       controller: _controller,
                       decoration: const InputDecoration(
-                        labelText: "예: 2272006460",
+                        labelText: "예: 12345678",
                         border: UnderlineInputBorder(),
                         suffixIcon: Icon(Icons.person),
                       ),
@@ -78,13 +78,13 @@ class _SignupServicePageState extends State<SignupServicePage> {
                       child: ElevatedButton(
                         onPressed: _nextAvailable
                             ? ()async {
-                          final serviceNumber = _controller.text.trim();
+                          final serviceNumber = _controller.text.trim().replaceAll('-', '');
                           final snapshot = await FirebaseFirestore.instance
                           .collection('users')
                           .where('serviceNumber', isEqualTo: serviceNumber)
                           .get();
-                          if(serviceNumber.length != 10){
-                            showDuplicateDialog(context, "군번 오류", "숫자 10자리를 입력해주세요.");
+                          if(serviceNumber.length != 7 && serviceNumber.length != 8){
+                            showDuplicateDialog(context, "군번 오류", "숫자 7~8자리를 입력해주세요.");
                           }
                           else if(snapshot.docs.isEmpty){
                             widget.data.serviceNumber = serviceNumber;

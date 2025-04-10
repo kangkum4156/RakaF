@@ -30,20 +30,11 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? _user;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    // 인증 상태 변화 리스너 등록
-    _auth.authStateChanges().listen((User? user) {
-      setState(() {
-        _user = user;
-      });// 로그인하거나 로그아웃하면 자동으로 _user가 바뀌고 화면이 바뀜
-    });
-  }
+
 
 
   // 로그인 함수
