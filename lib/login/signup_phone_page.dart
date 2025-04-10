@@ -66,7 +66,7 @@ class _SignupPhonePageState extends State<SignupPhonePage> {
                     TextField(
                       controller: _controller,
                       decoration: const InputDecoration(
-                        labelText: "예: 010-9950-1804",
+                        labelText: "예: 010-0000-0000",
                         border: UnderlineInputBorder(),
                         suffixIcon: Icon(Icons.phone),
                       ),
@@ -77,7 +77,7 @@ class _SignupPhonePageState extends State<SignupPhonePage> {
                       child: ElevatedButton(
                         onPressed: _nextAvailable
                             ? ()async {
-                          final phone = _controller.text.trim();
+                          final phone = _controller.text.trim().replaceAll('-', '');
                           widget.data.phone = phone;
                           Navigator.push(
                             context,
