@@ -66,7 +66,7 @@ class _SignupPasswordPageState extends State<SignupPasswordPage> {
                     ),
                     SizedBox(height: 10,),
                     const Text(
-                      "비밀번호는 영어와 문자를 사용하여 6자리 이상으로 구성해주세요",
+                      "비밀번호는 영어와 숫자를 사용하여 6자리 이상으로 구성해주세요",
                       style: TextStyle(fontSize: 16,),
                     ),
                     const Spacer(),

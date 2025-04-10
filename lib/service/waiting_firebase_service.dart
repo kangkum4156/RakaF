@@ -32,6 +32,7 @@ Future<void> waitingPressed(BuildContext context, Function updateUI) async {
   // Firestore에 웨이팅 정보 추가
   await firestore.collection("market").doc(marketId).collection("waiting").doc(userId).set({
     "name": userData['name'],
+    "FCM" : userData['FCM'],
     "serviceNumber": userData['serviceNumber'],
     "timestamp": FieldValue.serverTimestamp(),
     "waitingStatus": false
