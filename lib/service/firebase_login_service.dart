@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rokafirst/login/utils/encryption.dart';
 
 //firestore에 저장하는 함수
 Future <void> registerToFirestore({
@@ -19,10 +19,11 @@ async {
     String uid = userCredential.user!.uid;
 
     // 2. Firestore에 사용자 정보 저장
+    final encrypted = await encryptServiceNumber(serviceNumber);
     await FirebaseFirestore.instance.collection('users').doc(email).set({
       'uid': uid,
       'name': name,
-      'serviceNumber': serviceNumber,
+      'serviceNumber': encrypted,
       'phone': phone,
       'createdAt': FieldValue.serverTimestamp(),
       'isApproved': false, // 기본값: 승인되지 않음
