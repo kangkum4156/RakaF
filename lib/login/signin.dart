@@ -30,22 +30,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? _user;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    // 인증 상태 변화 리스너 등록
-    _auth.authStateChanges().listen((User? user) {
-      setState(() {
-        _user = user;
-      });// 로그인하거나 로그아웃하면 자동으로 _user가 바뀌고 화면이 바뀜
-    });
-  }
-
-
   // 로그인 함수
   Future<void> _signIn() async {
     try {
@@ -53,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
       await _auth.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim());
-      print("Signed in: ${userCredential.user?.email}");
     } on FirebaseAuthException catch (e) {
       print("Error: ${e.message}");
     }
@@ -64,35 +49,36 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'asset/img/air_logo.png', // 로고 이미지 경로
-                width: 200,
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                '대한민국공군',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                'REPUBLIC OF KOREA AIR FORCE',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              const SizedBox(height: 20),
-              LoginForm(
-                  onSignIn: _signIn, //  로그인 함수 전달
-                  onRegister: () {
-
-                  },
-                  emailController: _emailController,
-                  passwordController: _passwordController
-
-              ), // 분리된 클래스를 사용
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'asset/img/air_logo.png', // 로고 이미지 경로
+                  width: 200,
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  '대한민국공군',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                const Text(
+                  'REPUBLIC OF KOREA AIR FORCE',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+                const SizedBox(height: 20),
+                LoginForm(
+                    onSignIn: _signIn, //  로그인 함수 전달
+                    onRegister: () {
+                    },
+                    emailController: _emailController,
+                    passwordController: _passwordController
+          
+                ), // 분리된 클래스를 사용
+              ],
+            ),
           ),
         ),
       ),
@@ -108,10 +94,7 @@ class LoginForm extends StatelessWidget {
 
   final emailController;
   final passwordController;
-
-
-
-  LoginForm({
+  const LoginForm({
     super.key,
     required this.onSignIn,
     required this.onRegister,
@@ -177,9 +160,6 @@ class LoginForm extends StatelessWidget {
                   break;
 
               }
-
-
-
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.black,
