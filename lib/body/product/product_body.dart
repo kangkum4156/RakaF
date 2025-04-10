@@ -62,7 +62,17 @@ class ProductCard extends StatelessWidget {
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(servertoken + imagePath, width: double.infinity, fit: BoxFit.contain)
+                child: imagePath.isNotEmpty
+                    ? Image.network(
+                  servertoken + imagePath,
+                  width: double.infinity,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    // 이미지 로드 실패 시 아무것도 안 보이게
+                    return Center(child: Text("Image not found"));
+                  },
+                )
+                    : const SizedBox(),
               ),
             ),
             Padding(
