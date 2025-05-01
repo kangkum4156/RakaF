@@ -4,6 +4,7 @@ import 'package:rokafirst/login/signup_email_page.dart';
 import 'dialog/show_duplicate_dialog.dart';
 import 'signupflowdata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rokafirst/login/utils/encryption.dart';
 import 'package:rokafirst/login/signup_phone_page.dart';
 
 
@@ -77,50 +78,50 @@ class _SignupServicePageState extends State<SignupServicePage> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: _nextAvailable
-                            ? ()async {
-                          final serviceNumber = _controller.text.trim().replaceAll('-', '');
+                            ? () async {
+                          // 1) 원본 입력에서 하이픈 제거
+                          print("click==================================");
+                          final rawInput = _controller.text.trim().replaceAll('-', '');
+
+                          // 2) rawInput을 암호화 (deterministic CBC+0IV 덕분에 매번 같은 암호문)
+                          final encryptedInput = await encryptServiceNumber(rawInput);
+
+                          // 3) 암호문끼리 비교하는 where 쿼리
                           final snapshot = await FirebaseFirestore.instance
-                          .collection('users')
-                          .where('serviceNumber', isEqualTo: serviceNumber)
-                          .get();
-                          if(serviceNumber.length != 7 && serviceNumber.length != 8){
+                              .collection('users')
+                              .where('serviceNumber', isEqualTo: encryptedInput)
+                              .get();
+
+                          // 4) 길이 검사 & 중복 처리
+                          if (rawInput.length < 7 || rawInput.length > 8) {
                             showDuplicateDialog(context, "군번 오류", "숫자 7~8자리를 입력해주세요.");
-                          }
-                          else if(snapshot.docs.isEmpty){
-                            widget.data.serviceNumber = serviceNumber;
+                          } else if (snapshot.docs.isNotEmpty) {
+                            showDuplicateDialog(context, "중복된 군번", "이미 등록된 군번입니다.");
+                          } else {
+                            // 중복 없으니 data에 암호문 저장 후 다음
+                            widget.data.serviceNumber = encryptedInput;
                             Navigator.push(
                               context,
                               PageRouteBuilder(
                                 pageBuilder: (_, __, ___) => SignupEmailPage(data: widget.data),
                                 transitionsBuilder: (_, animation, __, child) {
-                                  const begin = Offset(1.0, 0.0); // 오른쪽에서 왼쪽으로
+                                  const begin = Offset(1.0, 0.0);
                                   const end = Offset.zero;
                                   const curve = Curves.ease;
-
-                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                                  var offsetAnimation = animation.drive(tween);
-
                                   return SlideTransition(
-                                    position: offsetAnimation,
+                                    position: animation.drive(
+                                      Tween(begin: begin, end: end).chain(CurveTween(curve: curve)),
+                                    ),
                                     child: child,
                                   );
                                 },
                               ),
                             );
-                          } else {
-                            showDuplicateDialog(
-                                context,
-                                "중복된 군번",
-                                "이미 등록된 군번입니다."
-                            );
                           }
-
-
                         }
                             : null,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                          _nextAvailable ? Colors.green : Colors.grey,
+                          backgroundColor: _nextAvailable ? Colors.green : Colors.grey,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
