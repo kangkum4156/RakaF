@@ -47,6 +47,7 @@ dependencies:
   encrypt: ^5.0.3
   firebase_analytics: ^11.4.5
   firebase_remote_config: ^5.4.3
+  video_player: ^2.9.5
 
 dev_dependencies:
   flutter_test:
@@ -72,8 +73,10 @@ flutter:
 
   assets:
     - asset/img/
+    - asset/intro.mp4
 
-  #img 경로까지만 저장해두면 뒤에 다른 이미지를 저장해도 자동으로 등록이 됨
+
+      #img 경로까지만 저장해두면 뒤에 다른 이미지를 저장해도 자동으로 등록이 됨
 
   #fonts:
     # 같은 폰트의 family에서 weight를 조절하여 bold 정도를 적용
