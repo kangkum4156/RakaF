@@ -80,9 +80,9 @@ class _SignupServicePageState extends State<SignupServicePage> {
                             ? ()async {
                           final serviceNumber = _controller.text.trim().replaceAll('-', '');
                           final snapshot = await FirebaseFirestore.instance
-                          .collection('users')
-                          .where('serviceNumber', isEqualTo: serviceNumber)
-                          .get();
+                              .collection('users')
+                              .where('serviceNumber', isEqualTo: serviceNumber)
+                              .get();
                           if(serviceNumber.length != 7 && serviceNumber.length != 8){
                             showDuplicateDialog(context, "군번 오류", "숫자 7~8자리를 입력해주세요.");
                           }
@@ -141,4 +141,3 @@ class _SignupServicePageState extends State<SignupServicePage> {
     );
   }
 }
-
