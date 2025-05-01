@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rokafirst/body/home/home_body.dart';
+import 'package:rokafirst/login/find_password.dart';
 import 'package:rokafirst/login/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rokafirst/service/firebase_login_service.dart';
@@ -136,7 +137,20 @@ class LoginForm extends StatelessWidget {
               border: OutlineInputBorder(),
             ),
           ),
-          const SizedBox(height: 20),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FindPassword()),
+                );
+              },
+              child: Text("비밀번호를 잊으셨나요?"),
+            ),
+          ),
+
+          const SizedBox(height: 10),
           ElevatedButton (
             onPressed: () async {
               final result = await signInWithApproval(emailController.text, passwordController.text);
@@ -168,12 +182,23 @@ class LoginForm extends StatelessWidget {
             ),
             child: const Text('Sign In'),
           ),
-          TextButton(onPressed: (){
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SignupNamePage(data: SignupFlowData(),)),
-            );
-          }, child: Text("Don't have account?"))
+          const SizedBox(height: 10),
+          OutlinedButton(
+              onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SignupNamePage(data: SignupFlowData()),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                minimumSize: const Size(double.infinity, 50),
+              ),
+              child: Text("Don't have account?"))
+
         ],
       ),
     );

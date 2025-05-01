@@ -82,3 +82,28 @@ Future<bool> isServiceNumberDuplicate(String serviceNumber) async {
       .get();
   return snapshot.docs.isNotEmpty;
 }
+//비밀번호 재설정 이메일 전송
+Future<void> sendPasswordResetEmail(String email) async {
+  try {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    print("비밀번호 재설정 이메일 전송 완료");
+  } catch (e) {
+    print("비밀번호 재설정 실패: $e");
+    rethrow;
+  }
+}
+
+//아이디(이메일) 찾기 기능
+Future<String?> findEmailByNameAndPhone(String name, String phone) async {
+  print("DEBUG: 검색 중 - name: $name, phone: $phone");
+  final snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .where('name', isEqualTo: name)
+      .where('phone', isEqualTo: phone)
+      .get();
+
+  if (snapshot.docs.isEmpty) return null;
+
+  return snapshot.docs.first.id; // 문서 ID = 이메일
+}
+
