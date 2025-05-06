@@ -57,8 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'asset/img/air_logo.png', // 로고 이미지 경로
-                  width: 200,
+                  'asset/img/signin_char.png', // 로고 이미지 경로
+                  width: 250,
                 ),
                 const SizedBox(height: 20),
                 const Text(

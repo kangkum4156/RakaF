@@ -2,7 +2,9 @@
 class Assets {
   Assets._();
 
-  static const String imgAirLogo = 'asset/img/air_logo.png';
+  static const String assetIntro = 'asset/intro.mp4';
+  static const String imgSigninChar = 'asset/img/signin_char.png';
   static const String imgSignupFinish = 'asset/img/signup_finish.png';
+  static const String rakaFAssetIntro = 'asset/intro.mp4';
 
 }
