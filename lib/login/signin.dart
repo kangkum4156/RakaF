@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Image.asset(
                   'asset/img/signin_char.png', // 로고 이미지 경로
-                  width: 250,
+                  width: 200,
                 ),
                 const SizedBox(height: 20),
                 const Text(
