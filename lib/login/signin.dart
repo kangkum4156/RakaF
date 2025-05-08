@@ -3,6 +3,7 @@ import 'package:rokafirst/body/home/home_body.dart';
 import 'package:rokafirst/login/find_password.dart';
 import 'package:rokafirst/login/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rokafirst/login/signup_privacy.dart';
 import 'package:rokafirst/service/firebase_login_service.dart';
 import '../data/product_data.dart';
 import 'package:rokafirst/login/signupflowdata.dart';
@@ -188,7 +189,7 @@ class LoginForm extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SignupNamePage(data: SignupFlowData()),
+                    builder: (context) => PrivacyConsentPage(),
                   ),
                 );
               },

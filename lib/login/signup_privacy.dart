@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:rokafirst/login/signup.dart';
+import 'package:rokafirst/login/signupflowdata.dart';
 
 class PrivacyConsentPage extends StatelessWidget {
-  final VoidCallback onAgree;
 
-  const PrivacyConsentPage({super.key, required this.onAgree});
+  const PrivacyConsentPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +46,14 @@ class PrivacyConsentPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: onAgree,
+                    onPressed: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignupNamePage(data: SignupFlowData()),
+                        ),
+                      );
+                    },
                     child: const Text("동의합니다"),
                   ),
                 ),
