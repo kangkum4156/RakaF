@@ -3,6 +3,7 @@ class Assets {
   Assets._();
 
   static const String assetIntro = 'asset/intro.mp4';
+  static const String iconAppIcon = 'asset/icon/app_icon.png';
   static const String imgSigninChar = 'asset/img/signin_char.png';
   static const String imgSignupFinish = 'asset/img/signup_finish.png';
   static const String rakaFAssetIntro = 'asset/intro.mp4';
