@@ -48,6 +48,7 @@ dependencies:
   firebase_analytics: ^11.4.5
   firebase_remote_config: ^5.4.3
   video_player: ^2.9.5
+  syncfusion_flutter_pdfviewer: ^29.1.41
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +77,7 @@ flutter:
   assets:
     - asset/img/
     - asset/intro.mp4
+    - asset/privacy_agreement.pdf
 
 
       #img 경로까지만 저장해두면 뒤에 다른 이미지를 저장해도 자동으로 등록이 됨
