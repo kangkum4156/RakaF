@@ -6,6 +6,7 @@ import 'package:rokafirst/service/waiting_firebase_service.dart';
 import '../../data/product_data.dart';
 import 'package:rokafirst/body/waiting/festival_service.dart'; // ✅ 세미콜론
 
+
 class WaitingBody extends StatefulWidget {
   const WaitingBody({super.key});
 

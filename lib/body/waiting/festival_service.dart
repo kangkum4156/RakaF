@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
+
 /// 축제 존재/참여 상태
 enum FestivalGate {
   noFestival,          // 축제 문서가 없음 → 대기 불가
