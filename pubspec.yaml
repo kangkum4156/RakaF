@@ -82,19 +82,19 @@ flutter:
 
       #img 경로까지만 저장해두면 뒤에 다른 이미지를 저장해도 자동으로 등록이 됨
 
-  #fonts:
-    # 같은 폰트의 family에서 weight를 조절하여 bold 정도를 적용
-    #- family: parisienne
       #fonts:
-        #- asset: asset/font/Parisienne-Regular.ttf
+      # 같은 폰트의 family에서 weight를 조절하여 bold 정도를 적용
+      #- family: parisienne
+      #fonts:
+      #- asset: asset/font/Parisienne-Regular.ttf
 
-    #- family: sunflower
+      #- family: sunflower
       #fonts:
-        #- asset: asset/font/sunflower-Light.ttf
-        #- asset: asset/font/sunflower-Medium.ttf
-          #weight: 500
-        #- asset: asset/font/sunflower-Bold.ttf
-          #weight: 700
+      #- asset: asset/font/sunflower-Light.ttf
+      #- asset: asset/font/sunflower-Medium.ttf
+      #weight: 500
+      #- asset: asset/font/sunflower-Bold.ttf
+    #weight: 700
     # To add assets to your application, add an assets section, like this:
     #assets:
     #- images/a_dot_burr.jpeg
