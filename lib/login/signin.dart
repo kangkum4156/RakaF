@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     emailController: _emailController,
                     passwordController: _passwordController
-          
+
                 ), // 분리된 클래스를 사용
               ],
             ),
