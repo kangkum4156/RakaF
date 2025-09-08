@@ -380,7 +380,7 @@ class _WaitingBodyState extends State<WaitingBody> {
                   }
 
                   return _festivalCard(
-                    title: '🎉 행사 안내',
+                    title: '🎉${fes.title} 행사 안내🎉',
                     subtitle: [
                       if ((fes.detail ?? '').isNotEmpty) '설명: ${fes.detail}',
                       '기간: ${fes.dateRangeText()}',

@@ -11,6 +11,7 @@ enum FestivalGate {
 
 /// 축제 상세 데이터
 class FestivalData {
+  final String? title;
   final String id;
   final String? detail;
   final Timestamp? durationStart;
@@ -18,6 +19,7 @@ class FestivalData {
 
   const FestivalData({
     required this.id,
+    this.title,
     this.detail,
     this.durationStart,
     this.durationFinish,
@@ -64,9 +66,10 @@ class FestivalService {
       final data = d.data();
       return FestivalData(
         id: d.id,
+        title: data['title'] as String?,
         detail: data['detail'] as String?,
-        durationStart: data['duration_st'] as Timestamp?,
-        durationFinish: data['duration_fi'] as Timestamp?,
+        durationStart: data['startDate'] as Timestamp?,
+        durationFinish: data['endDate'] as Timestamp?,
       );
     } on FirebaseException catch (e) {
       // 필요시 로깅
@@ -82,9 +85,9 @@ class FestivalService {
       final snap = await _db
           .collection('market').doc(marketId)
           .collection('festival')
-          .where('duration_st', isLessThanOrEqualTo: now)
-          .where('duration_fi', isGreaterThanOrEqualTo: now)
-          .orderBy('duration_st', descending: true)
+          .where('startDate', isLessThanOrEqualTo: now)
+          .where('endDate', isGreaterThanOrEqualTo: now)
+          .orderBy('startDate', descending: true)
           .limit(1)
           .get();
 
@@ -94,9 +97,10 @@ class FestivalService {
       final data = d.data();
       return FestivalData(
         id: d.id,
+        title: data['title'] as String?,
         detail: data['detail'] as String?,
-        durationStart: data['duration_st'] as Timestamp?,
-        durationFinish: data['duration_fi'] as Timestamp?,
+        durationStart: data['startDate'] as Timestamp?,
+        durationFinish: data['endDate'] as Timestamp?,
       );
     } on FirebaseException catch (_) {
       return null;

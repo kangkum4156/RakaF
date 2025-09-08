@@ -4,7 +4,6 @@ class Assets {
 
   static const String assetIntro = 'asset/intro.mp4';
   static const String assetPrivacyAgreement = 'asset/privacy_agreement.pdf';
-  static const String iconAppIcon = 'asset/icon/app_icon.png';
   static const String iconMilishop = 'asset/icon/milishop.png';
   static const String imgSigninChar = 'asset/img/signin_char.png';
   static const String imgSigninMili = 'asset/img/signin_mili.png';
