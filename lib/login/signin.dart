@@ -123,6 +123,14 @@ class LoginForm extends StatelessWidget {
       child: Column(
         children: [
           TextField(
+            controller: emailController,
+            decoration: const InputDecoration(
+              labelText: 'Email',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 10),
+          TextField(
             controller: passwordController,
             obscureText: true,
             decoration: const InputDecoration(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rokafirst/login/signin.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rokafirst/service/firebase_login_service.dart';
 
 class SignupFinish extends StatelessWidget {
   final String userName;
