@@ -138,7 +138,22 @@ class _SignupPasswordPageState extends State<SignupPasswordPage> {
                               }
                             } catch (e){
                               Navigator.pop(context); // 로딩 종료
-                              showDuplicateDialog(context, "오류", "회원가입 중 문제가 발생했습니다.");
+                              String errorMessage = "회원가입 중 문제가 발생했습니다.";
+                              
+                              // 구체적인 오류 메시지 표시
+                              if (e.toString().contains('이미 사용 중인 이메일')) {
+                                errorMessage = "이미 사용 중인 이메일입니다.";
+                              } else if (e.toString().contains('비밀번호가 너무 약합니다')) {
+                                errorMessage = "비밀번호가 너무 약합니다. 더 강한 비밀번호를 사용해주세요.";
+                              } else if (e.toString().contains('올바르지 않은 이메일')) {
+                                errorMessage = "올바르지 않은 이메일 형식입니다.";
+                              } else if (e.toString().contains('데이터베이스 권한')) {
+                                errorMessage = "데이터베이스 권한이 없습니다. 관리자에게 문의하세요.";
+                              } else if (e.toString().contains('서버에 연결할 수 없습니다')) {
+                                errorMessage = "서버에 연결할 수 없습니다. 네트워크를 확인해주세요.";
+                              }
+                              
+                              showDuplicateDialog(context, "오류", errorMessage);
                             }
 
 

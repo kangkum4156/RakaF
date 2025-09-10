@@ -34,16 +34,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  // 로그인 함수
+  
+  // 로그인 함수 - 실제로는 사용하지 않음 (LoginForm에서 직접 처리)
   Future<void> _signIn() async {
-    try {
-      UserCredential userCredential =
-      await _auth.signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim());
-    } on FirebaseAuthException catch (e) {
-      print("Error: ${e.message}");
-    }
+    // 이 함수는 현재 사용되지 않음
   }
 
   @override
@@ -72,13 +66,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
                 LoginForm(
-                    onSignIn: _signIn, //  로그인 함수 전달
+                    onSignIn: _signIn, // 실제로는 사용되지 않음
                     onRegister: () {
                     },
                     emailController: _emailController,
                     passwordController: _passwordController
-
-                ), // 분리된 클래스를 사용
+                ),
               ],
             ),
           ),
@@ -103,9 +96,7 @@ class LoginForm extends StatelessWidget {
     required this.emailController,
     required this.passwordController});
 
-
   @override
-
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -154,26 +145,62 @@ class LoginForm extends StatelessWidget {
           const SizedBox(height: 10),
           ElevatedButton (
             onPressed: () async {
-              final result = await signInWithApproval(emailController.text, passwordController.text);
-              switch(result) {
-                case(0):
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("로그인 실패. 이메일과 비밀번호를 확인하세요.")),
-                  );
-                  break;
-                case(1):
-                  email = emailController.text;
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeBody()),
-                  );
+              // 입력값 검증
+              if (emailController.text.trim().isEmpty || passwordController.text.trim().isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("이메일과 비밀번호를 입력해주세요.")),
+                );
+                return;
+              }
 
-                case(2):
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("관리자 승인 후 로그인 가능합니다.")),
-                  );
-                  break;
+              // 로딩 표시 (선택사항)
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
 
+              try {
+                final result = await signInWithApproval(
+                  emailController.text.trim(), 
+                  passwordController.text.trim()
+                );
+                
+                // 로딩 숨기기
+                Navigator.pop(context);
+                
+                switch(result) {
+                  case 0:
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("로그인 실패. 이메일과 비밀번호를 확인하세요.")),
+                    );
+                    break;
+                  case 1:
+                    // 로그인 성공 - HomeBody로 이동
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomeBody()),
+                    );
+                    break;
+                  case 2:
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("관리자 승인 후 로그인 가능합니다.")),
+                    );
+                    break;
+                  case 3:
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("이메일 인증을 완료해주세요.")),
+                    );
+                    break;
+                }
+              } catch (e) {
+                // 로딩 숨기기
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("로그인 중 오류가 발생했습니다: $e")),
+                );
               }
             },
             style: ElevatedButton.styleFrom(
@@ -189,7 +216,7 @@ class LoginForm extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PrivacyConsentPage(),
+                    builder: (context) => const PrivacyConsentPage(),
                   ),
                 );
               },
@@ -198,8 +225,7 @@ class LoginForm extends StatelessWidget {
                 foregroundColor: Colors.black,
                 minimumSize: const Size(double.infinity, 50),
               ),
-              child: Text("계정이 없으신가요?"))
-
+              child: const Text("계정이 없으신가요?"))
         ],
       ),
     );

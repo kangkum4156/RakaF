@@ -1,53 +1,238 @@
 import 'package:flutter/material.dart';
-import 'package:rokafirst/login/signin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rokafirst/service/firebase_login_service.dart';
 
-class SignupFinish extends StatelessWidget {
+class SignupFinish extends StatefulWidget {
   final String userName;
-
 
   const SignupFinish({super.key, required this.userName});
 
   @override
+  State<SignupFinish> createState() => _SignupFinishState();
+}
+
+class _SignupFinishState extends State<SignupFinish> {
+  bool _isEmailVerified = false;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkEmailVerification();
+  }
+
+  Future<void> _checkEmailVerification() async {
+    await reloadUser();
+    setState(() {
+      _isEmailVerified = isEmailVerified();
+    });
+  }
+
+  Future<void> _sendVerificationEmail() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await sendEmailVerification();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('인증 이메일을 전송했습니다. 이메일을 확인해주세요.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('이메일 전송 실패: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      appBar: AppBar(
+        title: const Text('회원가입 완료'),
+        automaticallyImplyLeading: false, // 뒤로가기 버튼 숨김
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Spacer(),
+            const SizedBox(height: 40),
+            
+            // 환영 메시지
+            Center(
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.check_circle,
+                    size: 80,
+                    color: Colors.green.shade600,
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    '${widget.userName}님,',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    '회원가입이 완료되었습니다!',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: 40),
+            
+            // 이메일 인증 섹션
+            if (!_isEmailVerified) ...[
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  border: Border.all(color: Colors.orange.shade200),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.email_outlined,
+                      color: Colors.orange.shade600,
+                      size: 48,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      '이메일 인증이 필요합니다',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.orange.shade800,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '${FirebaseAuth.instance.currentUser?.email ?? ''}로 전송된 인증 이메일을 확인하고 인증을 완료해주세요.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.orange.shade700,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: _isLoading ? null : _sendVerificationEmail,
+                        icon: _isLoading 
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.email),
+                        label: Text(_isLoading ? '전송 중...' : '인증 이메일 재전송'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange.shade600,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextButton(
+                      onPressed: _checkEmailVerification,
+                      child: const Text('인증 완료 확인'),
+                    ),
+                  ],
+                ),
+              ),
+            ] else ...[
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  border: Border.all(color: Colors.green.shade200),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.check_circle,
+                      color: Colors.green.shade600,
+                      size: 32,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        '이메일 인증이 완료되었습니다',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green.shade800,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            
+            const Spacer(),
+            
+            // 하단 버튼
             SizedBox(
-                width: MediaQuery.of(context).size.width * 0.3,
-                height: MediaQuery.of(context).size.height * 0.3,
-                child: Image.asset('asset/img/signup_finish.png')),
-            Text("$userName님 반갑습니다.", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
-            Text("관리자의 승인 이후 사용 가능합니다."),
-            SizedBox(height: 160,),
-            SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
+              width: double.infinity,
               child: ElevatedButton(
-                onPressed:(){
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginScreen(),));
-
+                onPressed: () {
+                  // 로그인 화면으로 이동
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/login',
+                    (route) => false,
+                  );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor: Colors.blue.shade600,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text("로그인 화면"),
+                child: const Text(
+                  '로그인하러 가기',
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
             ),
-            SizedBox(height: 60,),
+            
+            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
 }
+
