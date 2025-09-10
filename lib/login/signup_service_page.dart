@@ -91,7 +91,7 @@ class _SignupServicePageState extends State<SignupServicePage> {
                             Navigator.push(
                               context,
                               PageRouteBuilder(
-                                pageBuilder: (_, __, ___) => SignupEmailPage(data: widget.data),
+                                pageBuilder: (_, __, ___) => SignupPhonePage(data: widget.data),
                                 transitionsBuilder: (_, animation, __, child) {
                                   const begin = Offset(1.0, 0.0); // 오른쪽에서 왼쪽으로
                                   const end = Offset.zero;

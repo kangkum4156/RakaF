@@ -1,5 +1,6 @@
 // signup_name_page.dart
 import 'package:flutter/material.dart';
+import 'package:rokafirst/login/signup_email_page.dart';
 import 'signupflowdata.dart';
 import 'package:rokafirst/login/signup_service_page.dart';
 
@@ -78,7 +79,7 @@ class _SignupNamePageState extends State<SignupNamePage> {
                           Navigator.push(
                             context,
                             PageRouteBuilder(
-                              pageBuilder: (_, __, ___) => SignupServicePage(data: widget.data),
+                              pageBuilder: (_, __, ___) => SignupEmailPage(data: widget.data),
                               transitionsBuilder: (_, animation, __, child) {
                                 const begin = Offset(1.0, 0.0); // 오른쪽에서 왼쪽으로
                                 const end = Offset.zero;

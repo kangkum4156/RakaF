@@ -1,7 +1,7 @@
 class SignupFlowData {
   String name = '';
-  String serviceNumber = '';
   String email = '';
+  String serviceNumber = '';
   String phone = '';
   String password = '';
 }
