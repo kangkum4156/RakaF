@@ -63,11 +63,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                  '대한민국공군',
+                  '대한민국 국군',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const Text(
-                  'REPUBLIC OF KOREA AIR FORCE',
+                  'REPUBLIC OF KOREA ARMED FORCES',
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
                 const SizedBox(height: 20),
@@ -123,14 +123,6 @@ class LoginForm extends StatelessWidget {
       child: Column(
         children: [
           TextField(
-            controller: emailController,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 10),
-          TextField(
             controller: passwordController,
             obscureText: true,
             decoration: const InputDecoration(
@@ -181,7 +173,7 @@ class LoginForm extends StatelessWidget {
               foregroundColor: Colors.white,
               minimumSize: const Size(double.infinity, 50),
             ),
-            child: const Text('Sign In'),
+            child: const Text('로그인'),
           ),
           const SizedBox(height: 10),
           OutlinedButton(
@@ -198,7 +190,7 @@ class LoginForm extends StatelessWidget {
                 foregroundColor: Colors.black,
                 minimumSize: const Size(double.infinity, 50),
               ),
-              child: Text("Don't have account?"))
+              child: Text("계정이 없으신가요?"))
 
         ],
       ),
