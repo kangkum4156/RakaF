@@ -4,9 +4,12 @@ class Assets {
 
   static const String assetIntro = 'asset/intro.mp4';
   static const String assetPrivacyAgreement = 'asset/privacy_agreement.pdf';
-  static const String iconAppIcon = 'asset/icon/app_icon.png';
+  static const String iconMilishop = 'asset/icon/milishop.png';
   static const String imgSigninChar = 'asset/img/signin_char.png';
+  static const String imgSigninMili = 'asset/img/signin_mili.png';
   static const String imgSignupFinish = 'asset/img/signup_finish.png';
+  static const String imgSplshscreen = 'asset/img/splshscreen.png';
   static const String rakaFAssetIntro = 'asset/intro.mp4';
+  static const String rakaFAssetPrivacyAgreement = 'asset/privacy_agreement.pdf';
 
 }

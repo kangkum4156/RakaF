@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'asset/img/signin_char.png', // 로고 이미지 경로
+                  'asset/img/signin_mili.png', // 로고 이미지 경로
                   width: 200,
                 ),
                 const SizedBox(height: 20),
@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     emailController: _emailController,
                     passwordController: _passwordController
-          
+
                 ), // 분리된 클래스를 사용
               ],
             ),
