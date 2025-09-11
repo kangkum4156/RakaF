@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Roka First'),
+        title: const Text('MILISHOP'),
         centerTitle: true,
         backgroundColor: Colors.orange,
         actions: [
