@@ -7,12 +7,12 @@ List<dynamic> selectedNotices = []; // 선택된 지역의 notice 리스트 저�
 String? selectedMarketId;
 String? email;
 
-String servertoken = "http://68.233.120.163:8082/";
+String servertoken = "http://68.233.120.163:8082";
 
 // 서버에서 특정 지역의 상품 가져오기
 Future<void> fetchProductsByRegion() async {
   try {
-    final response = await http.get(Uri.parse(servertoken + 'products'));
+    final response = await http.get(Uri.parse(servertoken + '/products'));
 
     if (response.statusCode == 200) {
       // 🔥 UTF-8로 디코딩하여 JSON 파싱
@@ -39,7 +39,7 @@ Future<void> fetchProductsByRegion() async {
 // 서버에서 특정 지역의 공지사항 가져오기
 Future<void> fetchNoticeByRegion() async {
   try {
-    final response = await http.get(Uri.parse(servertoken + 'notices'));
+    final response = await http.get(Uri.parse(servertoken + '/notices'));
 
     if (response.statusCode == 200) {
       // 🔥 UTF-8로 디코딩하여 JSON 파싱
