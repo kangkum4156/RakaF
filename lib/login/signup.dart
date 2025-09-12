@@ -49,6 +49,7 @@ class _SignupNamePageState extends State<SignupNamePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
                     IconButton(
                         onPressed: () {
                           Navigator.pop(context);

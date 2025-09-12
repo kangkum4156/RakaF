@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rokafirst/service/firebase_login_service.dart';
+import 'package:rokafirst/login/signin.dart';
 
 class SignupFinish extends StatefulWidget {
   final String userName;
@@ -206,13 +207,13 @@ class _SignupFinishState extends State<SignupFinish> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // 로그인 화면으로 이동
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/login',
-                    (route) => false,
+                  // 현재 스택을 비우고 LoginScreen으로 이동
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (_) => const LoginScreen()),
+                        (route) => false,
                   );
                 },
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade600,
                   foregroundColor: Colors.white,

@@ -112,8 +112,6 @@ class _SignupEmailPageState extends State<SignupEmailPage> {
                                 "중복된 이메일",
                                 "이미 등록된 이메일입니다.");
                           }
-
-
                         }
                             : null,
                         style: ElevatedButton.styleFrom(

@@ -99,10 +99,13 @@ class _SignupPasswordPageState extends State<SignupPasswordPage> {
                           final password = _controller.text.trim();
                           final password2 = _controller2.text.trim();
                           if(password.length < 6){
-                            showDuplicateDialog(context, "비밀번호 오류", "비밀번호는 6자리 이상이어야 합니다.");
+                            showDuplicateDialog(context, "형식 오류", "비밀번호는 6자리 이상이어야 합니다.");
+                          }
+                          else if(!isValidPassword(password)){
+                            showDuplicateDialog(context, "형식 오류", "비밀번호는 영어와 숫자를 모두 사용하여야 합니다.");
                           }
                           else if(password != password2){
-                            showDuplicateDialog(context, "비밀번호", "비밀번호가 다릅니다.");
+                            showDuplicateDialog(context, "비밀번호 오류", "비밀번호가 일치하지 않습니다.");
                           }
                           else{
                             widget.data.password = password;
@@ -185,4 +188,9 @@ class _SignupPasswordPageState extends State<SignupPasswordPage> {
   }
 }
 
-
+bool isValidPassword(String password) {
+  final emailRegex = RegExp(
+    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+  );
+  return emailRegex.hasMatch(password);
+}
