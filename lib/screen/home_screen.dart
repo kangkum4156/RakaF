@@ -41,6 +41,29 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // 로그아웃 확인 다이얼로그
+  Future<bool> _confirmLogout(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // 바깥 터치로 닫히지 않게
+      builder: (context) => AlertDialog(
+        title: const Text("로그아웃"),
+        content: const Text("로그아웃 하시겠습니까?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text("아니오"),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text("예"),
+          ),
+        ],
+      ),
+    );
+    return result ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,11 +75,17 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.exit_to_app),
             onPressed: () async {
+              final ok = await _confirmLogout(context);
+              if (!ok) return;
+
               await FirebaseAuth.instance.signOut();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
-              ); // 로그아웃 후 로그인 화면으로 이동
+              if (!mounted) return;
+
+              // 스택 정리 후 로그인 화면으로 이동 (권장)
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    (route) => false,
+              );
             },
           ),
         ],
@@ -66,11 +95,11 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const HomeBody()),
-            ); // 뒤로가기 버튼을 눌렀을 때 HomeBody로 이동
+            );
           },
         ),
       ),
-      body: _screens[_selectedIndex], // 현재 선택된 화면 표시
+      body: _screens[_selectedIndex],
       bottomNavigationBar: CustomBottomNavBar(
         currentIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
@@ -80,6 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
