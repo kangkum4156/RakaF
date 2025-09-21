@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:rokafirst/service/firebase_login_service.dart';
 import 'package:rokafirst/login/signin.dart';
 
 class SignupFinish extends StatefulWidget {
@@ -14,7 +12,6 @@ class SignupFinish extends StatefulWidget {
 
 class _SignupFinishState extends State<SignupFinish> {
   bool _isEmailVerified = false;
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -23,43 +20,10 @@ class _SignupFinishState extends State<SignupFinish> {
   }
 
   Future<void> _checkEmailVerification() async {
-    await reloadUser();
+    // 개발용으로 항상 false로 설정
     setState(() {
-      _isEmailVerified = isEmailVerified();
+      _isEmailVerified = false;
     });
-  }
-
-  Future<void> _sendVerificationEmail() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      await sendEmailVerification();
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('인증 이메일을 전송했습니다. 이메일을 확인해주세요.'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('이메일 전송 실패: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
   }
 
   @override
@@ -109,64 +73,34 @@ class _SignupFinishState extends State<SignupFinish> {
             
             // 이메일 인증 섹션
             if (!_isEmailVerified) ...[
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.orange.shade50,
-                  border: Border.all(color: Colors.orange.shade200),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.email_outlined,
-                      color: Colors.orange.shade600,
-                      size: 48,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      '이메일 인증이 필요합니다',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.orange.shade800,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '${FirebaseAuth.instance.currentUser?.email ?? ''}로 전송된 인증 이메일을 확인하고 인증을 완료해주세요.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.orange.shade700,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        onPressed: _isLoading ? null : _sendVerificationEmail,
-                        icon: _isLoading 
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Icon(Icons.email),
-                        label: Text(_isLoading ? '전송 중...' : '인증 이메일 재전송'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange.shade600,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+              const SizedBox(height: 20),
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.green.shade50,
+                    border: Border.all(color: Colors.green, width: 2.0),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Column(
+                    children: [
+                      Text(
+                        ' e-mail 인증 후 로그인해 주세요.',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextButton(
-                      onPressed: _checkEmailVerification,
-                      child: const Text('인증 완료 확인'),
-                    ),
-                  ],
+                      SizedBox(height: 8),
+                      Text(
+                        'e-mail이 안 보이시면 스팸 메일함을 확인해주세요.',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ] else ...[
