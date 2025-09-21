@@ -189,8 +189,9 @@ class _SignupPasswordPageState extends State<SignupPasswordPage> {
 }
 
 bool isValidPassword(String password) {
-  final emailRegex = RegExp(
-    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+  // 영어와 숫자가 각각 최소 1개 이상 포함되어야 함, 전체 길이 6자 이상
+  final passwordRegex = RegExp(
+    r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$',
   );
-  return emailRegex.hasMatch(password);
+  return passwordRegex.hasMatch(password);
 }
