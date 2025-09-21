@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:rokafirst/login/signup_service_page.dart';
 import 'signupflowdata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rokafirst/login/signup_phone_page.dart';
 import 'package:rokafirst/login/dialog/show_duplicate_dialog.dart';
 
 
@@ -78,41 +77,57 @@ class _SignupEmailPageState extends State<SignupEmailPage> {
                       child: ElevatedButton(
                         onPressed: _nextAvailable
                             ? ()async {
-                          final email = _controller.text.trim();
-                          final doc = await FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(email)
-                              .get();
-                          if(!isValidEmail(email)){
-                            showDuplicateDialog(context, "이메일오류", "올바른 이메일 형식이 아닙니다");
-                          } else if(!doc.exists){
-                            widget.data.email = email;
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder: (_, __, ___) => SignupServicePage(data: widget.data),
-                                transitionsBuilder: (_, animation, __, child) {
-                                  const begin = Offset(1.0, 0.0); // 오른쪽에서 왼쪽으로
-                                  const end = Offset.zero;
-                                  const curve = Curves.ease;
+  try {
+    final email = _controller.text.trim();
+    
+    // 이메일 유효성 검사를 먼저 실행
+    if(!isValidEmail(email)){
+      showDuplicateDialog(context, "이메일오류", "올바른 이메일 형식이 아닙니다");
+      return;
+    }
+    
+    // Firebase Firestore에서 이메일 중복 검사
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(email)
+        .get();
+    
+    if(!doc.exists){
+      widget.data.email = email;
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => SignupServicePage(data: widget.data),
+          transitionsBuilder: (_, animation, __, child) {
+            const begin = Offset(1.0, 0.0); // 오른쪽에서 왼쪽으로
+            const end = Offset.zero;
+            const curve = Curves.ease;
 
-                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                                  var offsetAnimation = animation.drive(tween);
+            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var offsetAnimation = animation.drive(tween);
 
-                                  return SlideTransition(
-                                    position: offsetAnimation,
-                                    child: child,
-                                  );
-                                },
-                              ),
-                            );
-                          } else {
-                            showDuplicateDialog(
-                                context,
-                                "중복된 이메일",
-                                "이미 등록된 이메일입니다.");
-                          }
-                        }
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        ),
+      );
+    } else {
+      showDuplicateDialog(
+          context,
+          "중복된 이메일",
+          "이미 등록된 이메일입니다.");
+    }
+  } catch (e) {
+    // Firebase 에러 처리
+    print('Firebase 에러: $e');
+    showDuplicateDialog(
+        context,
+        "연결 오류",
+        "네트워크 연결을 확인해주세요.\n잠시 후 다시 시도해주세요.");
+  }
+}
                             : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
