@@ -24,6 +24,8 @@ class _PrivacyConsentPageState extends State<PrivacyConsentPage> {
           c2 == ConsentChoice.agree &&
           c3 == ConsentChoice.agree;
 
+  bool get _nextAvailable => canProceed;
+
   void _toggleAll(bool? value) {
     final agree = value ?? false;
     setState(() {
@@ -123,10 +125,15 @@ class _PrivacyConsentPageState extends State<PrivacyConsentPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
                   // 머리말
+                  SizedBox(height: 14),
+                  Text("다음의 내용을 자세히 읽어보시고 모든 내용을 이해하신 후에 동의 여부를 결정해주시기 바랍니다.\n",
+                      style:
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 6),
                   Text(
                     "밀리샵(이하 '회사'라고 합니다)은 개인정보보호법 등 관련 법령상의 개인정보보호 규정을 준수하며 귀하의 개인정보보호에 최선을 다하고 있습니다. "
                         "회사는 개인정보보호보호법에 근거하여 다음과 같은 내용으로 개인정보를 수집 및 처리하고자 합니다.\n\n"
-                        "다음의 내용을 자세히 읽어보시고 모든 내용을 이해하신 후에 동의 여부를 결정해주시기 바랍니다.\n",
+                        ,
                     style: TextStyle(fontSize: 14, height: 1.6),
                   ),
                   // 제1조
@@ -212,6 +219,7 @@ class _PrivacyConsentPageState extends State<PrivacyConsentPage> {
                         style: const TextStyle(
                             fontSize: 13, color: Colors.black54)),
                   ),
+                  
                 ],
               ),
             ),
@@ -233,10 +241,20 @@ class _PrivacyConsentPageState extends State<PrivacyConsentPage> {
                     );
                   }
                       : null,
-                  child: const Text('모두 동의합니다'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        _nextAvailable ? Colors.green : Colors.grey,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: const Text("다음"),
                 ),
               ),
             ),
+            SizedBox(height: 30)
           ],
         ),
       ),
